@@ -13,22 +13,50 @@ fun main() {
     println("Num ranges: ${ranges.size}")
 
     var i = 0
-    var repeatSum = 0L
+    var repeatSumP1 = 0L
+    var repeatSumP2 = 0L
     for (range in ranges) {
         println("Range $i = ${range.start}-${range.endInclusive} size=${range.endInclusive - range.start}")
         i++
 
         for (num in range.start .. range.endInclusive) {
-            val str = num.toString()
-            val length = str.length
-            if (length % 2 == 0) {
-                if (str.take(length / 2) == str.substring(length / 2)) {
-                    repeatSum += num
-                    println("Repeat: $str")
-                }
+            if (isRepeatP1(num)) {
+                //println("Repeat P1: $num")
+                repeatSumP1 += num
+            }
+            if (isRepeatP2(num)) {
+                println("Repeat P2: $num")
+                repeatSumP2 += num
             }
         }
     }
-    println("Repeats Sum: $repeatSum")
+    println("Repeats Sum Part 1: $repeatSumP1")
+    println("Repeats Sum Part 2: $repeatSumP2")
+}
+
+private fun isRepeatP1(value: Long): Boolean {
+    val str = value.toString()
+    val length = str.length
+    if (length % 2 == 0) {
+        if (str.take(length / 2) == str.substring(length / 2)) {
+            return true
+        }
+    }
+    return false
+}
+
+private fun isRepeatP2(value: Long): Boolean {
+    val str = value.toString()
+    val length = str.length
+    for (i in 2.. length) {
+        if (length % i == 0) {
+            val substrlen = length / i
+            val chunks = str.chunked(substrlen)
+            if (chunks.all { it == chunks[0]}) {
+                return true
+            }
+        }
+    }
+    return false
 }
 
